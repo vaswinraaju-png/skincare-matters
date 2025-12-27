@@ -48,48 +48,7 @@
       "@id": "https://skincare-matters.vercel.app/blog/skincare-ingredients-routines-myths.html"
     }
   }
-  </script>
-
-  <style>
-    .share-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 40px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-  font-size: 14px;
-}
-
-.share-label {
-  color: #555;
-}
-
-.share-bar button,
-.share-bar a {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  text-decoration: none;
-}
-
-    <script>
-  function sharePost() {
-    const shareData = {
-      title: document.title,
-      text: "Read this skincare article from Skincare Matters",
-      url: window.location.href
-    };
-
-    if (navigator.share) {
-      navigator.share(shareData);
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard");
-    }
-  }
-</script>
+  </script>  
 
     body {
       margin: 0;
@@ -159,18 +118,7 @@
     class="hero"
     loading="eager"
   />
-  <!-- SHARE BAR -->
-<div class="share-bar">
-  <span class="share-label">Share:</span>
 
-
-  <a
-    href="https://wa.me/?text=Check%20this%20skincare%20article:%20https://skincare-matters.vercel.app/blog/wedding-skincare.html"
-    target="_blank"
-    rel="noopener"
-    aria-label="Share on WhatsApp"
-  </a>
-</div>
 
 
   <h1>Skincare Ingredients, Skincare Routines & Skincare Myths: Best Practices Explained Simply</h1>
