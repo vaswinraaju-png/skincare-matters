@@ -1,0 +1,11 @@
+"use client";import {useEffect,useState} from "react";import Papa from "papaparse";import {sb,useWs} from "@/components/useWs";
+export default function C(){const ws=useWs();const [rows,setRows]=useState([]);const [f,setF]=useState({phone:"",name:"",tags:""});const [q,setQ]=useState("");
+ const load=()=>ws&&sb.from("contacts").select("*").eq("workspace_id",ws.id).order("created_at",{ascending:false}).then(({data})=>setRows(data||[]));useEffect(load,[ws]);
+ const save=async list=>{await sb.from("contacts").upsert(list.map(r=>({workspace_id:ws.id,phone:String(r.phone).replace(/\D/g,""),name:r.name,tags:(r.tags||"").split(/[;,]/).map(t=>t.trim()).filter(Boolean)})),{onConflict:"workspace_id,phone"});load();};
+ const csv=e=>Papa.parse(e.target.files[0],{header:true,complete:r=>save(r.data.filter(x=>x.phone))});
+ const vis=rows.filter(r=>(r.name+r.phone+r.tags.join()).toLowerCase().includes(q.toLowerCase()));
+ return <><h1 className="text-2xl font-bold mb-4">Contacts</h1>
+ <div className="grid md:grid-cols-4 gap-2 mb-3"><input className="inp" placeholder="Phone with country code" value={f.phone} onChange={e=>setF({...f,phone:e.target.value})}/><input className="inp" placeholder="Name" value={f.name} onChange={e=>setF({...f,name:e.target.value})}/><input className="inp" placeholder="Tags, comma separated" value={f.tags} onChange={e=>setF({...f,tags:e.target.value})}/><button className="btn" onClick={()=>{save([f]);setF({phone:"",name:"",tags:""})}}>Add contact</button></div>
+ <div className="flex flex-wrap gap-2 mb-3"><input className="inp flex-1" placeholder="Search" value={q} onChange={e=>setQ(e.target.value)}/><label className="btn-ghost inline-flex items-center cursor-pointer">Import CSV (phone,name,tags)<input type="file" accept=".csv" hidden onChange={csv}/></label></div>
+ <div className="overflow-x-auto bg-white"><table className="w-full text-sm"><thead><tr className="text-left border-b"><th className="p-3">Name</th><th>Phone</th><th>Tags</th><th>Opted in</th></tr></thead>
+ <tbody>{vis.map(r=><tr key={r.id} className="border-b"><td className="p-3">{r.name}</td><td>{r.phone}</td><td>{r.tags.join(", ")}</td><td>{r.opted_in?"Yes":"No"}</td></tr>)}</tbody></table>{!vis.length&&<p className="p-6 opacity-70">Add a contact or import a CSV to build your audience.</p>}</div></>;}
